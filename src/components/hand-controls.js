@@ -1,11 +1,6 @@
 /* global THREE */
 var registerComponent = require('../core/component').registerComponent;
 
-// Found at https://github.com/aframevr/assets.
-var MODEL_URLS = {
-  left: 'https://cdn.aframe.io/controllers/hands/leftHand.glb',
-  right: 'https://cdn.aframe.io/controllers/hands/rightHand.glb'
-};
 
 // Poses.
 var ANIMATIONS = {
@@ -44,7 +39,10 @@ EVENTS[ANIMATIONS.point] = 'pointing';
  * @property {string} Hand mapping (`left`, `right`).
  */
 module.exports.Component = registerComponent('hand-controls', {
-  schema: {default: 'left'},
+  schema: {default: 'left',
+			models: {'https://cdn.aframe.io/controllers/hands/leftHand.glb',
+			'https://cdn.aframe.io/controllers/hands/rightHand.glb'}},
+
 
   init: function () {
     var self = this;
@@ -186,7 +184,7 @@ module.exports.Component = registerComponent('hand-controls', {
 
     // Set model.
     if (hand !== previousHand) {
-      this.loader.load(MODEL_URLS[hand], function (gltf) {
+      this.loader.load(data.models[hand], function (gltf) {
         var mesh = gltf.scene.children[0];
         mesh.mixer = new THREE.AnimationMixer(mesh);
         self.clips = gltf.animations;
